@@ -2,10 +2,10 @@ from .imaterial_service import IMaterialService
 
 from repositories.material.imaterial_repository import IMaterialRepository
 from repositories.empleado.iempleado_repository import IEmpleadoRepository
-from repositories.inventario.iinventario_material_repository import IInventarioMaterialRepository
+from repositories.inventario.iinventario_empleado_repository import IInventarioEmpleadoRepository
 
 from entities.material import Material
-from entities.inventario_material import InventarioMaterial
+from entities.inventario_empleado import InventarioEmpleado
 
 from utils.misc import db
 
@@ -13,7 +13,7 @@ class MaterialService(IMaterialService):
     def __init__(
             self, material_repository: IMaterialRepository, 
             empleado_repository: IEmpleadoRepository,
-            inventario_material_repository: IInventarioMaterialRepository
+            inventario_material_repository: IInventarioEmpleadoRepository
             ):
         self.material_repository = material_repository
         self.empleado_repository = empleado_repository
