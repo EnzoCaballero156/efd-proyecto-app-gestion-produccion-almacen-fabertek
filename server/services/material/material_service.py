@@ -13,11 +13,11 @@ class MaterialService(IMaterialService):
     def __init__(
             self, material_repository: IMaterialRepository, 
             empleado_repository: IEmpleadoRepository,
-            inventario_material_repository: IInventarioEmpleadoRepository
+            inventario_empleado_repository: IInventarioEmpleadoRepository
             ):
         self.material_repository = material_repository
         self.empleado_repository = empleado_repository
-        self.inventario_material_repository = inventario_material_repository
+        self.inventario_empleado_repository = inventario_empleado_repository
 
     def __obtener_empleados(self, proceso_actual, siguiente_proceso):
         empleado_actual = self.empleado_repository.get_by_area(proceso_actual)
@@ -25,15 +25,15 @@ class MaterialService(IMaterialService):
         return empleado_actual, empleado_receptor
     
     def __obtener_inventarios(self, empleado_actual_id, empleado_receptor_id, material_id):
-        inventario_actual = self.inventario_material_repository.get_by_empleado_id_and_material_id(empleado_actual_id, material_id)
-        inventario_receptor = self.inventario_material_repository.get_by_empleado_id_and_material_id(empleado_receptor_id, material_id)
+        inventario_actual = self.inventario_empleado_repository.get_by_empleado_id_and_material_id(empleado_actual_id, material_id)
+        inventario_receptor = self.inventario_empleado_repository.get_by_empleado_id_and_material_id(empleado_receptor_id, material_id)
         return inventario_actual, inventario_receptor
 
     def __actualizar_stock(self, inventario_actual, inventario_receptor, cantidad):
         inventario_actual.cantidad -= cantidad
         inventario_receptor.cantidad += cantidad
-        self.inventario_material_repository.save(inventario_actual)
-        self.inventario_material_repository.save(inventario_receptor)
+        self.inventario_empleado_repository.save(inventario_actual)
+        self.inventario_empleado_repository.save(inventario_receptor)
         return True
 
     def obtener_material_por_id(self, id):
@@ -42,8 +42,8 @@ class MaterialService(IMaterialService):
     def registrar_material(self, empleado, tipo, cantidad, estado):
         nuevo_material = Material(tipo=tipo)
         self.material_repository.save(nuevo_material)
-        registro_inventario = InventarioMaterial(empleado=empleado.detalle, estado=estado, cantidad=cantidad, material=nuevo_material)
-        self.inventario_material_repository.save(registro_inventario)
+        registro_inventario = InventarioEmpleado(empleado=empleado.detalle, estado=estado, cantidad=cantidad, material=nuevo_material)
+        self.inventario_empleado_repository.save(registro_inventario)
         db.session.commit()
 
         return nuevo_material
@@ -58,8 +58,8 @@ class MaterialService(IMaterialService):
             return None
         
         if not inventario_receptor:
-            inventario_receptor = InventarioMaterial(empleado=empleado_receptor.detalle, estado=inventario_actual.estado, material=material_a_enviar, cantidad=0)
-            self.inventario_material_repository.save(inventario_receptor)
+            inventario_receptor = InventarioEmpleado(empleado=empleado_receptor.detalle, estado=inventario_actual.estado, material=material_a_enviar, cantidad=0)
+            self.inventario_empleado_repository.save(inventario_receptor)
 
         self.__actualizar_stock(inventario_actual, inventario_receptor, cantidad)
         db.session.commit()
@@ -67,8 +67,8 @@ class MaterialService(IMaterialService):
         return inventario_actual
 
     def actualizar_estado_material(self, empleado, material, estado):
-        inventario = self.inventario_material_repository.get_by_empleado_id_and_material_id(empleado.detalle.id, material.id)
+        inventario = self.inventario_empleado_repository.get_by_empleado_id_and_material_id(empleado.detalle.id, material.id)
         inventario.estado = estado
-        self.inventario_material_repository.save(inventario)
+        self.inventario_empleado_repository.save(inventario)
         db.session.commit()
         return inventario
