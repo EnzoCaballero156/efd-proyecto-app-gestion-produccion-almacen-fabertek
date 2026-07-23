@@ -1,13 +1,18 @@
 from flask import Blueprint, request, jsonify
+
 from repositories.empleado.empleado_repository import EmpleadoRepository
+from repositories.area.area_repository import AreaRepository
+
 from services.gerente.gerente_service import GerenteService
 from services.empleado.empleado_service import EmpleadoService
+
 from utils.misc import bcrypt
 
 gerente_bp = Blueprint('gerente_bp', __name__)
 
 empleado_repository = EmpleadoRepository()
-gerente_service = GerenteService(empleado_repository)
+area_repository = AreaRepository()
+gerente_service = GerenteService(empleado_repository, area_repository)
 empleado_service = EmpleadoService(empleado_repository)
 
 @gerente_bp.post('/registrar-empleado')
@@ -31,7 +36,7 @@ def registrar_empleado():
         'id': nuevo_empleado.id,
         'nombre': nuevo_empleado.nombre,
         'apellido': nuevo_empleado.apellido,
-        'area': nuevo_empleado.detalle.area,
+        'area': nuevo_empleado.detalle.area.nombre,
         'email': nuevo_empleado.email,
         'password': password
     }) 
@@ -56,7 +61,7 @@ def editar_empleado_por_id(id):
         'id': empleado_editado.id,
         'nombre': empleado_editado.nombre,
         'apellido': empleado_editado.apellido,
-        'area': empleado_editado.detalle.area,
+        'area': empleado_editado.detalle.area.nombre,
         'email': empleado_editado.email,
         'password': empleado_editado.password
     })

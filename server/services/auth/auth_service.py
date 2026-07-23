@@ -18,4 +18,5 @@ class AuthService(IAuthService):
         return False
 
     def iniciar_sesion(self, email):
-        return self.empleado_repository.get_by_email(email)
+        data = self.empleado_repository.get_by_email(email)
+        return data

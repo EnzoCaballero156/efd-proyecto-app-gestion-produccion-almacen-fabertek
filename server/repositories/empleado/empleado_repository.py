@@ -9,8 +9,11 @@ class EmpleadoRepository(IEmpleadoRepository):
     def get_by_id(self, id):
         return Empleado.query.filter_by(id=id).first()
 
-    def get_by_area(self, area):
-        data = EmpleadoDetalle.query.filter_by(area=area).first()
+    def get_all_activo(self):
+        return EmpleadoDetalle.query.filter_by(activo=True).all()
+
+    def get_by_area_id(self, area_id):
+        data = EmpleadoDetalle.query.filter_by(area_id=area_id).first()
         return data.empleado if data else None
 
     def get_by_email(self, email):

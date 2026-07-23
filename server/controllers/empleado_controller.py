@@ -16,7 +16,7 @@ def obtener_empleados():
         "apellido": empleado.apellido,
         "email": empleado.email,
         "password": empleado.password,
-        "area": empleado.detalle.area
+        "area": empleado.detalle.area.nombre
     } for empleado in empleados])
 
 @empleado_bp.get('/id/<id>')
@@ -32,12 +32,12 @@ def obtener_empleado_por_id(id):
         "apellido": empleado.apellido,
         "email": empleado.email,
         "password": empleado.password,
-        "area": empleado.detalle.area
+        "area": empleado.detalle.area.nombre
     })
 
-@empleado_bp.get('/area/<area>')
-def obtener_empleado_por_area(area):
-    empleado = empleado_service.obtener_empleado_por_area(area)
+@empleado_bp.get('/area/<area_id>')
+def obtener_empleado_por_area_id(area_id):
+    empleado = empleado_service.obtener_empleado_por_area_id(area_id)
 
     if empleado is None:
         return jsonify({"error": "Empleado no existe."}), 404
@@ -48,5 +48,5 @@ def obtener_empleado_por_area(area):
         "apellido": empleado.apellido,
         "email": empleado.email,
         "password": empleado.password,
-        "area": empleado.detalle.area
+        "area": empleado.detalle.area.nombre
     })

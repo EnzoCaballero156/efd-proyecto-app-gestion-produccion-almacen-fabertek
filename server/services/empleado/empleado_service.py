@@ -11,8 +11,8 @@ class EmpleadoService(IEmpleadoService):
     def obtener_empleado_por_id(self, id):
         return self.empleado_repository.get_by_id(id)
 
-    def obtener_empleado_por_area(self, area):
-        return self.empleado_repository.get_by_area(area)
+    def obtener_empleado_por_area_id(self, area_id):
+        return self.empleado_repository.get_by_area_id(area_id)
     
     def empleado_existe_por_email(self, email):
         return self.empleado_repository.exists_by_email(email)

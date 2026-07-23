@@ -3,7 +3,11 @@ from abc import abstractmethod
 
 class IEmpleadoRepository(IRepository):
     @abstractmethod
-    def get_by_area(self, area):
+    def get_all_activo(self):
+        pass
+
+    @abstractmethod
+    def get_by_area_id(self, area_id):
         pass
     
     @abstractmethod

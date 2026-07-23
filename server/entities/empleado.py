@@ -16,7 +16,7 @@ class EmpleadoDetalle(db.Model):
 
     id = db.Column(db.String(32), primary_key=True, default=get_uuid)
     empleado_id = db.Column(db.String(32), db.ForeignKey('empleados.id'), unique=True, nullable=False)
-    area = db.Column(db.String(15), nullable=False)
+    area_id = db.Column(db.String(32), db.ForeignKey('areas.id'), nullable=False)
 
-    inventario = db.relationship("InventarioEmpleado", back_populates="empleado", cascade="all, delete-orphan")
     empleado = db.relationship("Empleado", back_populates="detalle")
+    area = db.relationship("Area", back_populates="empleado")

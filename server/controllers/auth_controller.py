@@ -22,12 +22,15 @@ def get_current_session():
         return jsonify({"error": "No autorizado."}), 401
     
     user = auth_service.cargar_sesion_actual(user_id)
+    if not user:
+        session.pop("user_id", None)
+        return jsonify({"error": "No autorizado."}), 401
 
     return jsonify({
         'id': user.id,
         'nombre': user.nombre,
         'apellido': user.apellido,
-        'area': user.detalle.area,
+        'area': user.detalle.area.nombre,
         'email': user.email
     })
 
@@ -59,7 +62,7 @@ def iniciar_sesion():
         "id": usuario.id,
         "nombre": usuario.nombre,
         "apellido": usuario.apellido,
-        "area": usuario.detalle.area,
+        "area": usuario.detalle.area.nombre,
         "email": usuario.email
     })
 

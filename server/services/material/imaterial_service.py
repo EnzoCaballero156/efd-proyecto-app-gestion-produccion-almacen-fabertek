@@ -6,7 +6,7 @@ class IMaterialService(ABC):
         pass
     
     @abstractmethod
-    def registrar_material(self, empleado, tipo, cantidad, estado):
+    def registrar_material(self, area, tipo, cantidad, estado):
         pass
 
     @abstractmethod
@@ -14,5 +14,5 @@ class IMaterialService(ABC):
         pass
 
     @abstractmethod
-    def actualizar_estado_material(self, empleado, material, estado):
+    def actualizar_estado_material(self, area, material, estado):
         pass

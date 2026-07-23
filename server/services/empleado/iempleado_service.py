@@ -10,5 +10,9 @@ class IEmpleadoService(ABC):
         pass
 
     @abstractmethod
-    def obtener_empleado_por_area(self, area):
+    def obtener_empleado_por_area_id(self, area_id):
+        pass
+
+    @abstractmethod
+    def empleado_existe_por_email(self, email):
         pass
