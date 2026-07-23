@@ -1,8 +1,8 @@
 from utils.misc import db, get_uuid
 from datetime import datetime, timezone
 
-class Inventario(db.Model):
-    __tablename__ = "inventarios"
+class InventarioMaterial(db.Model):
+    __tablename__ = "inventario_material"
 
     id = db.Column(db.String(32), primary_key=True, default=get_uuid)
 

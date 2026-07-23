@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from repositories.material.material_repository import MaterialRepository
 from repositories.entrada_salida_material.entrada_salida_material_repository import EntradaSalidaMaterialRepository
 from repositories.empleado.empleado_repository import EmpleadoRepository
-from repositories.inventario.inventario_repository import InventarioRepository
+from repositories.inventario.inventario_material_repository import InventarioMaterialRepository
 
 from services.empleado.empleado_service import EmpleadoService
 from services.material.material_service import MaterialService
@@ -13,10 +13,10 @@ material_bp = Blueprint('material_bp', __name__)
 material_repository = MaterialRepository()
 entrada_salida_material_repository = EntradaSalidaMaterialRepository()
 empleado_repository = EmpleadoRepository()
-inventario_repository = InventarioRepository()
+inventario_material_repository = InventarioMaterialRepository()
 
 empleado_service = EmpleadoService(empleado_repository)
-material_service = MaterialService(material_repository, empleado_repository, inventario_repository)
+material_service = MaterialService(material_repository, empleado_repository, inventario_material_repository)
 entrada_salida_material_service = EntradaSalidaMaterialService(
     entrada_salida_material_repository, empleado_repository, material_repository
 )
@@ -35,15 +35,17 @@ def registrar_material():
     if not empleado:
         return jsonify({"error": "Empleado no existe."}), 404
 
+    area_actual = empleado.detalle.area
+
     nuevo_material = material_service.registrar_material(empleado, tipo_material, cantidad, estado)
-    entrada_salida_material_service.registrar_historial(empleado.detalle.area, tipo_material)
+    entrada_salida_material_service.registrar_historial(area_actual, tipo_material)
 
     return jsonify({
         "id": nuevo_material.id,
         "tipoMaterial": nuevo_material.tipo,
         "cantidad": cantidad,
         "estado": estado,
-        "area": empleado.detalle.area
+        "area": area_actual
     })
 
 @material_bp.post('/enviar-a/<siguiente_proceso>')
@@ -60,7 +62,7 @@ def enviar_material(siguiente_proceso):
         return jsonify({"error": "Material no existe."}), 404
     
     inventario_actual = material_service.enviar_material(proceso_actual, siguiente_proceso, material_a_enviar, cantidad)
-
+    entrada_salida_material_service.actualizar_historial(proceso_actual, siguiente_proceso, material_id)
     if not inventario_actual:
         return jsonify({"error": "No se pudo realizar la operación."}), 401
 

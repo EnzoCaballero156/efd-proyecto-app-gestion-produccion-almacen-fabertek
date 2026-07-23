@@ -29,7 +29,7 @@ def get_current_session():
         'apellido': user.apellido,
         'area': user.detalle.area,
         'email': user.email
-    }) 
+    })
 
 def create_session(user_id):
     session['user_id'] = user_id
